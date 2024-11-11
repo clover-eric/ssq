@@ -9,14 +9,20 @@ ENV FLASK_APP=app.py
 ENV FLASK_ENV=production
 ENV PORT=51168
 
-# 复制项目文件
-COPY . .
+# 设置pip镜像源
+RUN pip config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple
+
+# 复制依赖文件
+COPY requirements.txt .
 
 # 安装依赖
 RUN pip install --no-cache-dir -r requirements.txt
+
+# 复制项目文件
+COPY . .
 
 # 暴露端口
 EXPOSE 51168
 
 # 启动命令
-CMD ["gunicorn", "--bind", "0.0.0.0:51168", "app:app"] 
+CMD ["gunicorn", "--bind", "0.0.0.0:51168", "app:app", "--timeout", "120"] 

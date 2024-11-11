@@ -171,5 +171,13 @@ def query_draw(draw_no):
             'code': 500
         })
 
+@app.route('/health')
+def health_check():
+    """健康检查端点"""
+    return jsonify({
+        'status': 'healthy',
+        'timestamp': datetime.now().isoformat()
+    })
+
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=PORT, debug=True) 
