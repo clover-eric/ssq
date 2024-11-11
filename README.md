@@ -42,11 +42,19 @@
 
 ### 方式一：Docker 部署（推荐） 
 
+#### 首次部署
+
 # 一键部署
 
 ```bash
 curl -fsSL https://raw.githubusercontent.com/clover-eric/ssq/main/deploy.sh | bash
 ```
+
+#### 一键升级
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/clover-eric/ssq/main/upgrade.sh | bash
+``` 
 
 ### 方式二：手动部署
 

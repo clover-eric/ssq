@@ -655,21 +655,27 @@ input:invalid {
     display: flex;
     align-items: center;
     gap: 1rem;
-    margin-bottom: 1rem;
+    margin-right: 1rem;
 }
 
 .batch-options label {
-    font-size: 0.9rem;
-    color: #666;
+    white-space: nowrap;
+    color: var(--text-color);
 }
 
 .batch-options select {
-    padding: 0.5rem;
-    border-radius: 8px;
-    border: 1px solid #ddd;
+    padding: 0.6rem 1rem;
+    border: none;
+    border-radius: var(--border-radius);
     background: white;
-    font-size: 0.9rem;
+    font-size: 1rem;
     cursor: pointer;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    transition: var(--transition);
+}
+
+.batch-options select:hover {
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
 }
 
 /* 生成历史记录样式 */
@@ -822,4 +828,36 @@ input:invalid {
 
 .history-list::-webkit-scrollbar-thumb:hover {
     background: #555;
+}
+
+.history-item {
+    opacity: 1;
+    transform: translateX(0);
+    transition: all 0.3s ease;
+}
+
+.history-item.deleting {
+    opacity: 0;
+    transform: translateX(-100%);
+}
+
+.history-actions button {
+    background: none;
+    border: none;
+    padding: 8px;
+    cursor: pointer;
+    opacity: 0.7;
+    transition: opacity 0.3s ease;
+}
+
+.history-actions button:hover {
+    opacity: 1;
+}
+
+.history-actions .copy-btn:hover {
+    color: var(--primary-color);
+}
+
+.history-actions .delete-btn:hover {
+    color: #ff3b30;
 }

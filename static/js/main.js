@@ -224,11 +224,44 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // 切换生成模式
     modeBtns.forEach(btn => {
-        btn.addEventListener('click', () => {
-            if (!isGenerating) {
-                modeBtns.forEach(b => b.classList.remove('active'));
-                btn.classList.add('active');
-                currentMode = btn.dataset.mode;
+        btn.addEventListener('click', function() {
+            if (isGenerating) return;
+            
+            // 移除所有按钮的active类
+            modeBtns.forEach(b => b.classList.remove('active'));
+            // 给当前按钮添加active类
+            this.classList.add('active');
+            
+            // 更新当前模式
+            currentMode = this.dataset.mode;
+            
+            // 获取批量选项元素
+            const batchOptions = document.querySelector('.batch-options');
+            
+            // 无论是哪种模式，都保持批量选项可见
+            batchOptions.style.display = 'flex';
+            
+            // 如果是智能推荐模式，可以根据需要调整批量选项的最大值
+            const batchCount = document.getElementById('batchCount');
+            if (currentMode === 'smart') {
+                // 清空现有选项
+                batchCount.innerHTML = '';
+                // 添加新的选项（这里限制智能推荐最多5注）
+                [1, 3, 5].forEach(value => {
+                    const option = document.createElement('option');
+                    option.value = value;
+                    option.textContent = `${value}注`;
+                    batchCount.appendChild(option);
+                });
+            } else {
+                // 随机模式恢复原有选项
+                batchCount.innerHTML = '';
+                [1, 3, 5, 10].forEach(value => {
+                    const option = document.createElement('option');
+                    option.value = value;
+                    option.textContent = `${value}注`;
+                    batchCount.appendChild(option);
+                });
             }
         });
     });
@@ -534,7 +567,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     for (const numbers of allNumbers) {
                         await animateNumbers(numbers);
                         numberHistory.add(numbers, currentMode);
-                        // 短暂延迟，让用户能看清每组号码
+                        // 短暂延迟，让用户能看��每组号码
                         await new Promise(resolve => setTimeout(resolve, 800));
                     }
                 }
@@ -623,4 +656,175 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // 初始加载
     loadLatestDraws();
+
+    // 添加生成记录到历史列表
+    function addToHistory(numbers, mode) {
+        const historyList = document.getElementById('generatedHistory');
+        const emptyHistory = historyList.querySelector('.empty-history');
+        if (emptyHistory) {
+            emptyHistory.remove();
+        }
+
+        const historyItem = document.createElement('div');
+        historyItem.className = 'history-item';
+        
+        const timestamp = new Date().toLocaleTimeString('zh-CN', {
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit'
+        });
+
+        historyItem.innerHTML = `
+            <div class="history-content">
+                <div class="history-info">
+                    <span class="history-time">${timestamp}</span>
+                    <span class="history-mode">${mode === 'random' ? '随机生成' : '智能推荐'}</span>
+                </div>
+                <div class="history-numbers">${numbers}</div>
+            </div>
+            <div class="history-actions">
+                <button class="copy-btn" title="复制号码">
+                    <span class="btn-icon">📋</span>
+                </button>
+                <button class="delete-btn" title="删除记录">
+                    <span class="btn-icon">🗑️</span>
+                </button>
+            </div>
+        `;
+
+        // 绑定复制按钮事件
+        const copyBtn = historyItem.querySelector('.copy-btn');
+        copyBtn.addEventListener('click', function() {
+            const numbersText = this.closest('.history-item').querySelector('.history-numbers').textContent;
+            navigator.clipboard.writeText(numbersText).then(() => {
+                showNotification('号码已复制到剪贴板');
+            }).catch(err => {
+                showNotification('复制失败，请手动复制');
+                console.error('复制失败:', err);
+            });
+        });
+
+        // 绑定删除按钮事件
+        const deleteBtn = historyItem.querySelector('.delete-btn');
+        deleteBtn.addEventListener('click', function() {
+            const item = this.closest('.history-item');
+            item.classList.add('deleting');
+            setTimeout(() => {
+                item.remove();
+                // 如果没有记录了，显示空状态
+                const historyList = document.getElementById('generatedHistory');
+                if (historyList.children.length === 0) {
+                    historyList.innerHTML = '<div class="empty-history">暂无生成记录</div>';
+                }
+                // 更新本地存储
+                updateLocalStorage();
+            }, 300);
+        });
+
+        // 添加到历史列表的开头
+        historyList.insertBefore(historyItem, historyList.firstChild);
+        
+        // 限制历史记录数量为50条
+        while (historyList.children.length > 50) {
+            historyList.lastChild.remove();
+        }
+
+        // 更新本地存储
+        updateLocalStorage();
+    }
+
+    // 更新本地存储
+    function updateLocalStorage() {
+        const historyList = document.getElementById('generatedHistory');
+        const historyItems = Array.from(historyList.querySelectorAll('.history-item')).map(item => {
+            return {
+                time: item.querySelector('.history-time').textContent,
+                mode: item.querySelector('.history-mode').textContent === '随机生成' ? 'random' : 'smart',
+                numbers: item.querySelector('.history-numbers').textContent
+            };
+        });
+        localStorage.setItem('generatedHistory', JSON.stringify(historyItems));
+    }
+
+    // 从本地存储加载历史记录
+    function loadHistoryFromStorage() {
+        const historyList = document.getElementById('generatedHistory');
+        const savedHistory = localStorage.getItem('generatedHistory');
+        
+        if (savedHistory) {
+            const historyItems = JSON.parse(savedHistory);
+            historyList.innerHTML = ''; // 清空现有内容
+            
+            historyItems.forEach(item => {
+                const historyItem = document.createElement('div');
+                historyItem.className = 'history-item';
+                historyItem.innerHTML = `
+                    <div class="history-content">
+                        <div class="history-info">
+                            <span class="history-time">${item.time}</span>
+                            <span class="history-mode">${item.mode === 'random' ? '随机生成' : '智能推荐'}</span>
+                        </div>
+                        <div class="history-numbers">${item.numbers}</div>
+                    </div>
+                    <div class="history-actions">
+                        <button class="copy-btn" title="复制号码">
+                            <span class="btn-icon">📋</span>
+                        </button>
+                        <button class="delete-btn" title="删除记录">
+                            <span class="btn-icon">🗑️</span>
+                        </button>
+                    </div>
+                `;
+                
+                // 绑定按钮事件
+                bindHistoryItemEvents(historyItem);
+                historyList.appendChild(historyItem);
+            });
+        }
+    }
+
+    // 绑定历史记录项的事件
+    function bindHistoryItemEvents(historyItem) {
+        // 绑定复制按钮事件
+        const copyBtn = historyItem.querySelector('.copy-btn');
+        copyBtn.addEventListener('click', function() {
+            const numbersText = this.closest('.history-item').querySelector('.history-numbers').textContent;
+            navigator.clipboard.writeText(numbersText).then(() => {
+                showNotification('号码已复制到剪贴板');
+            }).catch(err => {
+                showNotification('复制失败，请手动复制');
+                console.error('复制失败:', err);
+            });
+        });
+
+        // 绑定删除按钮事件
+        const deleteBtn = historyItem.querySelector('.delete-btn');
+        deleteBtn.addEventListener('click', function() {
+            const item = this.closest('.history-item');
+            item.classList.add('deleting');
+            setTimeout(() => {
+                item.remove();
+                // 如果没有记录了，显示空状态
+                const historyList = document.getElementById('generatedHistory');
+                if (historyList.children.length === 0) {
+                    historyList.innerHTML = '<div class="empty-history">暂无生成记录</div>';
+                }
+                // 更新本地存储
+                updateLocalStorage();
+            }, 300);
+        });
+    }
+
+    // 清空历史记录
+    document.getElementById('clearHistory').addEventListener('click', function() {
+        const historyList = document.getElementById('generatedHistory');
+        historyList.innerHTML = '<div class="empty-history">暂无生成记录</div>';
+        localStorage.removeItem('generatedHistory');
+    });
+
+    // 初始化时加载历史记录
+    document.addEventListener('DOMContentLoaded', function() {
+        loadHistoryFromStorage();
+        // ... 其他初始化代码 ...
+    });
 }); 
