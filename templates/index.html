@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eric的致富工具之双色球</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Eric的致富工具之双色球</h1>
+            <div class="current-date" id="currentDate"></div>
+        </header>
+
+        <main>
+            <section class="number-generator">
+                <div class="generator-container">
+                    <div class="generator-header">
+                        <h2>双色球号码生成器</h2>
+                        <div class="generator-mode">
+                            <button class="mode-btn active" data-mode="random">
+                                <span class="mode-icon">🎲</span>
+                                随机生成
+                            </button>
+                            <button class="mode-btn" data-mode="smart">
+                                <span class="mode-icon">🤖</span>
+                                智能推荐
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="number-stage">
+                        <div class="number-area red-area">
+                            <div class="area-title">红球区</div>
+                            <div class="ball-container">
+                                <div class="ball-wrapper">
+                                    <div class="lottery-ball red">
+                                        <span class="ball-number"></span>
+                                        <div class="ball-shine"></div>
+                                    </div>
+                                </div>
+                                <div class="ball-wrapper">
+                                    <div class="lottery-ball red">
+                                        <span class="ball-number"></span>
+                                        <div class="ball-shine"></div>
+                                    </div>
+                                </div>
+                                <div class="ball-wrapper">
+                                    <div class="lottery-ball red">
+                                        <span class="ball-number"></span>
+                                        <div class="ball-shine"></div>
+                                    </div>
+                                </div>
+                                <div class="ball-wrapper">
+                                    <div class="lottery-ball red">
+                                        <span class="ball-number"></span>
+                                        <div class="ball-shine"></div>
+                                    </div>
+                                </div>
+                                <div class="ball-wrapper">
+                                    <div class="lottery-ball red">
+                                        <span class="ball-number"></span>
+                                        <div class="ball-shine"></div>
+                                    </div>
+                                </div>
+                                <div class="ball-wrapper">
+                                    <div class="lottery-ball red">
+                                        <span class="ball-number"></span>
+                                        <div class="ball-shine"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="number-area blue-area">
+                            <div class="area-title">蓝球区</div>
+                            <div class="ball-container">
+                                <div class="ball-wrapper">
+                                    <div class="lottery-ball blue">
+                                        <span class="ball-number"></span>
+                                        <div class="ball-shine"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="generator-actions">
+                        <div class="batch-options">
+                            <label for="batchCount">批量生成:</label>
+                            <select id="batchCount">
+                                <option value="1">1注</option>
+                                <option value="3">3注</option>
+                                <option value="5">5注</option>
+                                <option value="10">10注</option>
+                            </select>
+                        </div>
+                        <button id="generateBtn" class="action-btn generate-btn">
+                            <div class="btn-content">
+                                <span class="btn-icon">✨</span>
+                                <span class="btn-text">开始生成</span>
+                            </div>
+                            <div class="generate-ripple"></div>
+                        </button>
+                    </div>
+
+                    <div class="generated-history">
+                        <div class="history-header">
+                            <h3>生成记录</h3>
+                            <button id="clearHistory" class="clear-btn">清空记录</button>
+                        </div>
+                        <div id="generatedHistory" class="history-list">
+                            <div class="empty-history">暂无生成记录</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="latest-draw">
+                <h2 id="resultTitle">最新开奖</h2>
+                <div class="draw-result latest" id="latestDraw">
+                    <div class="loading">加载中...</div>
+                </div>
+            </section>
+
+            <section class="history-draws">
+                <div class="history-header">
+                    <h2>历史开奖</h2>
+                    <div class="search-container">
+                        <div class="search-wrapper">
+                            <input type="text" id="drawNumber" placeholder="请输入期号，如：2024001" maxlength="7" pattern="\d{7}">
+                            <span class="search-hint">输入7位数字期号</span>
+                        </div>
+                        <button id="searchBtn">查询</button>
+                        <button id="resetBtn" class="reset-btn" style="display: none;">返回最新</button>
+                    </div>
+                </div>
+                <div class="draw-list" id="historyDraws">
+                    <div class="loading">加载中...</div>
+                </div>
+            </section>
+        </main>
+
+        <div id="notification" class="notification"></div>
+    </div>
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html> 
