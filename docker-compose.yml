@@ -10,5 +10,11 @@ services:
     environment:
       - FLASK_APP=app.py
       - FLASK_ENV=production
+      - PORT=51168
     volumes:
-      - ./logs:/app/logs 
+      - ./logs:/app/logs
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:51168"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
