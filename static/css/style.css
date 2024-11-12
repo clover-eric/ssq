@@ -4,6 +4,8 @@
     --text-color: #1D1D1F;
     --border-radius: 12px;
     --transition: all 0.3s ease;
+    --max-content-width: 1200px;
+    --content-padding: 20px;
 }
 
 * {
@@ -20,20 +22,21 @@ body {
 }
 
 .container {
-    max-width: 1200px;
+    max-width: var(--max-content-width);
     margin: 0 auto;
-    padding: 2rem;
+    padding: 20px var(--content-padding);
+    width: 100%;
 }
 
 header {
     text-align: center;
-    margin-bottom: 3rem;
+    margin-bottom: 30px;
 }
 
 h1 {
-    font-size: 2.5rem;
-    margin-bottom: 1.5rem;
-    font-weight: 700;
+    font-size: 1.8rem;
+    color: var(--text-color);
+    margin-bottom: 10px;
 }
 
 .search-container {
@@ -735,42 +738,11 @@ input:invalid {
     font-size: 0.9em;
 }
 
-.history-actions {
-    display: flex;
-    gap: 10px;
-}
-
+/* 移除不需要的按钮样式 */
+.history-actions,
 .copy-btn,
 .delete-btn {
-    padding: 6px 16px;
-    border: none;
-    border-radius: 6px;
-    font-size: 0.9em;
-    cursor: pointer;
-    transition: var(--transition);
-    min-width: 60px;
-}
-
-.copy-btn {
-    background-color: var(--primary-color);
-    color: white;
-}
-
-.delete-btn {
-    background-color: #ff3b30;
-    color: white;
-}
-
-.copy-btn:hover,
-.delete-btn:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
-}
-
-.copy-btn:active,
-.delete-btn:active {
-    transform: translateY(0);
-    box-shadow: none;
+    display: none;
 }
 
 @media (max-width: 768px) {
@@ -813,10 +785,10 @@ input:invalid {
 /* 生成器容器样式 */
 .generator-container {
     background: var(--card-bg);
-    border-radius: 12px;
+    border-radius: var(--border-radius);
     padding: 20px;
     box-shadow: var(--card-shadow);
-    margin-bottom: 20px;
+    width: 100%;
 }
 
 /* 生成按钮容器样式 */
@@ -848,5 +820,81 @@ input:invalid {
     
     .generate-btn-container {
         margin-top: 20px;
+    }
+}
+
+/* 响应式布局调整 */
+@media (min-width: 1440px) {
+    :root {
+        --content-padding: 40px;
+    }
+    
+    .container {
+        max-width: 1400px;
+    }
+}
+
+@media (min-width: 1024px) and (max-width: 1439px) {
+    :root {
+        --content-padding: 30px;
+    }
+    
+    .container {
+        max-width: 1200px;
+    }
+}
+
+@media (min-width: 768px) and (max-width: 1023px) {
+    :root {
+        --content-padding: 20px;
+    }
+    
+    .container {
+        max-width: 900px;
+    }
+    
+    header h1 {
+        font-size: 1.6rem;
+    }
+}
+
+@media (max-width: 767px) {
+    :root {
+        --content-padding: 15px;
+    }
+    
+    .container {
+        padding: 15px var(--content-padding);
+    }
+    
+    header h1 {
+        font-size: 1.4rem;
+    }
+    
+    .generator-container,
+    .latest-draw,
+    .history-draws {
+        padding: 15px;
+    }
+}
+
+/* 确保内容区域在小屏幕上也有合适的边距 */
+@media (max-width: 480px) {
+    :root {
+        --content-padding: 10px;
+    }
+    
+    .container {
+        padding: 10px var(--content-padding);
+    }
+    
+    .generator-container,
+    .latest-draw,
+    .history-draws {
+        padding: 12px;
+    }
+    
+    header h1 {
+        font-size: 1.2rem;
     }
 }
