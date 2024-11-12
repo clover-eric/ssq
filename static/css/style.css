@@ -898,3 +898,98 @@ input:invalid {
         font-size: 1.2rem;
     }
 }
+
+/* 球号显示样式 */
+.history-ball {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    color: white;
+    font-weight: bold;
+    margin: 0 4px;
+    font-size: 16px;
+}
+
+/* 历史记录项样式 */
+.history-item {
+    display: flex;
+    flex-direction: column;
+    padding: 15px;
+    border-bottom: 1px solid rgba(0,0,0,0.1);
+    gap: 10px;
+}
+
+.history-numbers {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    align-items: center;
+}
+
+.history-right {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: center;
+    color: var(--text-secondary);
+    font-size: 0.9em;
+}
+
+/* 移动端优化 */
+@media (max-width: 480px) {
+    .history-ball {
+        width: 32px;
+        height: 32px;
+        font-size: 14px;
+        margin: 0 2px;
+    }
+    
+    .history-item {
+        padding: 12px;
+    }
+    
+    .history-numbers {
+        gap: 6px;
+    }
+    
+    .history-right {
+        width: 100%;
+        justify-content: space-between;
+    }
+    
+    .history-mode,
+    .history-time {
+        font-size: 0.85em;
+    }
+    
+    /* 调整容器边距 */
+    .container {
+        padding: 10px;
+    }
+    
+    /* 调整生成器容器内边距 */
+    .generator-container {
+        padding: 15px;
+    }
+}
+
+/* 超小屏幕优化 */
+@media (max-width: 360px) {
+    .history-ball {
+        width: 28px;
+        height: 28px;
+        font-size: 13px;
+        margin: 0 1px;
+    }
+    
+    .history-item {
+        padding: 10px;
+    }
+    
+    .history-right {
+        font-size: 0.8em;
+    }
+}
