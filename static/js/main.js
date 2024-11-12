@@ -235,6 +235,16 @@ document.addEventListener('DOMContentLoaded', function() {
             // 更新当前模式
             currentMode = this.dataset.mode;
             
+            // 更新模式说明显示
+            document.querySelectorAll('.mode-description').forEach(desc => {
+                desc.classList.remove('active');
+            });
+            if (currentMode === 'random') {
+                document.querySelector('.random-mode-desc').classList.add('active');
+            } else {
+                document.querySelector('.smart-mode-desc').classList.add('active');
+            }
+            
             // 获取批量选项元素
             const batchOptions = document.querySelector('.batch-options');
             
@@ -506,7 +516,7 @@ document.addEventListener('DOMContentLoaded', function() {
         randomBtn.classList.toggle('active', mode === 'random');
         smartBtn.classList.toggle('active', mode === 'smart');
         
-        // 更新生成按钮样式和文本
+        // 更新生成按钮��式和文本
         if (mode === 'random') {
             generateBtn.className = 'action-btn generate-btn random-mode';
             btnIcon.textContent = '🎲';

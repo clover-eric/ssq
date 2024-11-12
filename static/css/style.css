@@ -993,3 +993,62 @@ input:invalid {
         font-size: 0.8em;
     }
 }
+
+/* 模式说明区域样式 */
+.mode-descriptions {
+    margin-top: 15px;
+    padding: 15px;
+    background: rgba(255, 255, 255, 0.8);
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.mode-description {
+    display: none;
+    padding: 12px 15px;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    line-height: 1.5;
+    color: #666;
+    background: #f8f9fa;
+    margin-bottom: 10px;
+}
+
+.mode-description.active {
+    display: block;
+    animation: fadeIn 0.3s ease;
+}
+
+.mode-description h3 {
+    color: #333;
+    margin: 0 0 8px 0;
+    font-size: 1rem;
+}
+
+.mode-description p {
+    margin: 0;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-5px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* 移动端适配 */
+@media (max-width: 480px) {
+    .mode-descriptions {
+        margin-top: 10px;
+        padding: 10px;
+    }
+    
+    .mode-description {
+        padding: 10px;
+        font-size: 0.85rem;
+    }
+}
