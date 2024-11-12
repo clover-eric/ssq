@@ -861,40 +861,96 @@ document.addEventListener('DOMContentLoaded', function() {
         const historyItem = document.createElement('div');
         historyItem.className = 'history-item';
         
+        // 创建号码区域
         const numbersSpan = document.createElement('span');
         numbersSpan.className = 'history-numbers';
-        numbersSpan.textContent = numbers;
+        numbersSpan.textContent = `${numbers.slice(0, 6).map(n => n.toString().padStart(2, '0')).join(' ')} ${numbers[6].toString().padStart(2, '0')}`;
         
+        // 创建右侧区域
         const rightSection = document.createElement('div');
         rightSection.className = 'history-right';
         
+        // 创建模式标签
         const modeSpan = document.createElement('span');
         modeSpan.className = 'history-mode';
-        modeSpan.textContent = mode;
+        modeSpan.textContent = mode === 'random' ? '随机生成' : '智能推荐';
         
-        const copyBtn = document.createElement('button');
-        copyBtn.className = 'copy-btn';
-        copyBtn.textContent = '复制';
-        copyBtn.onclick = function() {
-            navigator.clipboard.writeText(numbers).then(() => {
-                showNotification('号码已复制到剪贴板');
-            }).catch(err => {
-                showNotification('复制失败，请手动复制');
-            });
-        };
-        
+        // 创建时间标签
         const timeSpan = document.createElement('span');
         timeSpan.className = 'history-time';
         timeSpan.textContent = new Date(timestamp).toLocaleString();
         
-        rightSection.appendChild(modeSpan);
-        rightSection.appendChild(copyBtn);
-        rightSection.appendChild(timeSpan);
+        // 创建操作按钮区域
+        const actionsDiv = document.createElement('div');
+        actionsDiv.className = 'history-actions';
         
+        // 创建复制按钮
+        const copyBtn = document.createElement('button');
+        copyBtn.className = 'copy-btn';
+        copyBtn.textContent = '复制';
+        copyBtn.onclick = function() {
+            const numbers = this.closest('.history-item').querySelector('.history-numbers').textContent;
+            navigator.clipboard.writeText(numbers).then(() => {
+                showNotification('号码已复制到剪贴板');
+            }).catch(err => {
+                showNotification('复制失败，请手动复制');
+                console.error('复制失败:', err);
+            });
+        };
+        
+        // 创建删除按钮
+        const deleteBtn = document.createElement('button');
+        deleteBtn.className = 'delete-btn';
+        deleteBtn.textContent = '删除';
+        deleteBtn.onclick = function() {
+            const item = this.closest('.history-item');
+            item.classList.add('deleting');
+            setTimeout(() => {
+                item.remove();
+                // 如果没有记录了，显示空状态
+                if (historyList.children.length === 0) {
+                    historyList.innerHTML = '<div class="empty-history">暂无生成记录</div>';
+                }
+                // 更新本地存储
+                saveHistoryToStorage();
+            }, 300);
+        };
+        
+        // 组装右侧区域
+        actionsDiv.appendChild(copyBtn);
+        actionsDiv.appendChild(deleteBtn);
+        rightSection.appendChild(modeSpan);
+        rightSection.appendChild(timeSpan);
+        rightSection.appendChild(actionsDiv);
+        
+        // 组装整个记录项
         historyItem.appendChild(numbersSpan);
         historyItem.appendChild(rightSection);
         
+        // 添加到历史列表的开头
         historyList.insertBefore(historyItem, historyList.firstChild);
+        
+        // 保存到本地存储
         saveHistoryToStorage();
+    }
+
+    // 保存历史记录到本地存储
+    function saveHistoryToStorage() {
+        const historyList = document.getElementById('generatedHistory');
+        const records = [];
+        
+        historyList.querySelectorAll('.history-item').forEach(item => {
+            const numbers = item.querySelector('.history-numbers').textContent;
+            const mode = item.querySelector('.history-mode').textContent === '随机生成' ? 'random' : 'smart';
+            const time = item.querySelector('.history-time').textContent;
+            
+            records.push({
+                numbers: numbers,
+                mode: mode,
+                timestamp: new Date(time).getTime()
+            });
+        });
+        
+        localStorage.setItem('generatedHistory', JSON.stringify(records));
     }
 }); 
