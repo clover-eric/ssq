@@ -246,7 +246,7 @@ document.addEventListener('DOMContentLoaded', function() {
             if (currentMode === 'smart') {
                 // 清空现有选项
                 batchCount.innerHTML = '';
-                // 添加新的选项（这里限制智能推荐最多5注）
+                // 添加��的选项（这里限制智能推荐最多5注）
                 [1, 3, 5].forEach(value => {
                     const option = document.createElement('option');
                     option.value = value;
@@ -806,7 +806,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // 绑定历史记录项的事件
     function bindHistoryItemEvents(historyItem) {
-        // 绑���复制按钮事件
+        // 绑复制按钮事件
         const copyBtn = historyItem.querySelector('.copy-btn');
         copyBtn.addEventListener('click', function() {
             const numbersText = this.closest('.history-item').querySelector('.history-numbers').textContent;
@@ -858,36 +858,61 @@ document.addEventListener('DOMContentLoaded', function() {
             historyList.innerHTML = '';
         }
 
+        // 创建历史记录项
         const historyItem = document.createElement('div');
         historyItem.className = 'history-item';
+
+        // 创建号码显示区域
+        const numbersDiv = document.createElement('div');
+        numbersDiv.className = 'history-numbers';
         
-        // 格式化号码显示
-        const redBalls = numbers.slice(0, 6).map(n => 
-            `<span class="history-ball red-ball">${n.toString().padStart(2, '0')}</span>`
-        ).join('');
-        const blueBall = `<span class="history-ball blue-ball">${numbers[6].toString().padStart(2, '0')}</span>`;
+        // 添加红球
+        numbers.slice(0, 6).forEach(num => {
+            const ball = document.createElement('span');
+            ball.className = 'history-ball red-ball';
+            ball.textContent = num.toString().padStart(2, '0');
+            numbersDiv.appendChild(ball);
+        });
         
-        historyItem.innerHTML = `
-            <div class="history-numbers">
-                ${redBalls}
-                ${blueBall}
-            </div>
-            <div class="history-right">
-                <span class="history-mode">${mode === 'random' ? '随机生成' : '智能推荐'}</span>
-                <span class="history-time">${new Date(timestamp).toLocaleString()}</span>
-                <div class="history-actions">
-                    <button class="copy-btn" title="复制号码">复制</button>
-                    <button class="delete-btn" title="删除记录">删除</button>
-                </div>
-            </div>
-        `;
+        // 添加蓝球
+        const blueBall = document.createElement('span');
+        blueBall.className = 'history-ball blue-ball';
+        blueBall.textContent = numbers[6].toString().padStart(2, '0');
+        numbersDiv.appendChild(blueBall);
+
+        // 创建右侧信息区域
+        const rightDiv = document.createElement('div');
+        rightDiv.className = 'history-right';
         
-        // 绑定复制按钮事件
-        const copyBtn = historyItem.querySelector('.copy-btn');
-        copyBtn.addEventListener('click', function(e) {
-            e.preventDefault();
-            const numbersText = this.closest('.history-item').querySelector('.history-numbers').textContent;
-            navigator.clipboard.writeText(numbersText.trim()).then(() => {
+        // 添加模式和时间信息
+        const modeSpan = document.createElement('span');
+        modeSpan.className = 'history-mode';
+        modeSpan.textContent = mode === 'random' ? '随机生成' : '智能推荐';
+        
+        const timeSpan = document.createElement('span');
+        timeSpan.className = 'history-time';
+        timeSpan.textContent = new Date(timestamp).toLocaleString('zh-CN', {
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit',
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit'
+        });
+
+        // 创建操作按钮区域
+        const actionsDiv = document.createElement('div');
+        actionsDiv.className = 'history-actions';
+        
+        // 创建复制按钮
+        const copyBtn = document.createElement('button');
+        copyBtn.className = 'copy-btn';
+        copyBtn.textContent = '复制';
+        copyBtn.addEventListener('click', function() {
+            const numbersText = Array.from(numbersDiv.querySelectorAll('.history-ball'))
+                .map(ball => ball.textContent)
+                .join(' ');
+            navigator.clipboard.writeText(numbersText).then(() => {
                 showNotification('号码已复制到剪贴板');
             }).catch(err => {
                 console.error('复制失败:', err);
@@ -895,22 +920,33 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         });
         
-        // 绑定删除按钮事件
-        const deleteBtn = historyItem.querySelector('.delete-btn');
-        deleteBtn.addEventListener('click', function(e) {
-            e.preventDefault();
-            const item = this.closest('.history-item');
-            item.classList.add('deleting');
+        // 创建删除按钮
+        const deleteBtn = document.createElement('button');
+        deleteBtn.className = 'delete-btn';
+        deleteBtn.textContent = '删除';
+        deleteBtn.addEventListener('click', function() {
+            historyItem.classList.add('deleting');
             setTimeout(() => {
-                item.remove();
-                // 如果没有记录了，显示空状态
+                historyItem.remove();
                 if (historyList.children.length === 0) {
                     historyList.innerHTML = '<div class="empty-history">暂无生成记录</div>';
                 }
-                // 更新本地存储
                 saveHistoryToStorage();
             }, 300);
         });
+
+        // 组装操作按钮
+        actionsDiv.appendChild(copyBtn);
+        actionsDiv.appendChild(deleteBtn);
+        
+        // 组装右侧区域
+        rightDiv.appendChild(modeSpan);
+        rightDiv.appendChild(timeSpan);
+        rightDiv.appendChild(actionsDiv);
+        
+        // 组装整个历史记录项
+        historyItem.appendChild(numbersDiv);
+        historyItem.appendChild(rightDiv);
         
         // 添加到历史列表的开头
         historyList.insertBefore(historyItem, historyList.firstChild);
