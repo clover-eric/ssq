@@ -66,7 +66,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // 渲染开奖结果
     function renderDraw(draw, container, isLatest = false) {
         if (isLatest) {
-            // 最新开奖结果渲染
+            // 最新开奖结果染
             const drawHtml = `
                 <div class="draw-info">
                     <div class="draw-info-item">
@@ -499,6 +499,8 @@ document.addEventListener('DOMContentLoaded', function() {
         const generateBtn = document.getElementById('generateBtn');
         const btnIcon = generateBtn.querySelector('.btn-icon');
         const btnText = generateBtn.querySelector('.btn-text');
+        const batchOptions = document.querySelector('.batch-options');
+        const batchCount = document.getElementById('batchCount');
         
         // 更新按钮状态
         randomBtn.classList.toggle('active', mode === 'random');
@@ -509,16 +511,35 @@ document.addEventListener('DOMContentLoaded', function() {
             generateBtn.className = 'action-btn generate-btn random-mode';
             btnIcon.textContent = '🎲';
             btnText.textContent = '随机生成';
+            
+            // 随机模式的批量选项
+            batchCount.innerHTML = '';
+            [1, 3, 5, 10].forEach(value => {
+                const option = document.createElement('option');
+                option.value = value;
+                option.textContent = `${value}注`;
+                batchCount.appendChild(option);
+            });
         } else {
             generateBtn.className = 'action-btn generate-btn smart-mode';
             btnIcon.textContent = '🤖';
             btnText.textContent = '智能推荐';
+            
+            // 智能推荐模式的批量选项
+            batchCount.innerHTML = '';
+            [1, 3, 5].forEach(value => {
+                const option = document.createElement('option');
+                option.value = value;
+                option.textContent = `${value}注`;
+                batchCount.appendChild(option);
+            });
         }
         
-        // 更新批量生成选项显示
-        const batchOptions = document.querySelector('.batch-options');
+        // 保持批量选项始终可见
         if (batchOptions) {
-            batchOptions.style.display = mode === 'random' ? 'flex' : 'none';
+            batchOptions.style.display = 'flex';
+            batchOptions.style.opacity = '1';
+            batchOptions.style.pointerEvents = 'auto';
         }
     }
 
@@ -567,7 +588,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     for (const numbers of allNumbers) {
                         await animateNumbers(numbers);
                         numberHistory.add(numbers, currentMode);
-                        // 短暂延迟，让用户能看��每组号码
+                        // 短暂延迟，让用户能看每组号码
                         await new Promise(resolve => setTimeout(resolve, 800));
                     }
                 }
@@ -820,6 +841,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const historyList = document.getElementById('generatedHistory');
         historyList.innerHTML = '<div class="empty-history">暂无生成记录</div>';
         localStorage.removeItem('generatedHistory');
+        showNotification('历史记录已清空');
     });
 
     // 初始化时加载历史记录
@@ -827,4 +849,52 @@ document.addEventListener('DOMContentLoaded', function() {
         loadHistoryFromStorage();
         // ... 其他初始化代码 ...
     });
+
+    // 添加历史记录项的函数
+    function addHistoryItem(numbers, mode, timestamp) {
+        const historyList = document.getElementById('generatedHistory');
+        const emptyHistory = historyList.querySelector('.empty-history');
+        if (emptyHistory) {
+            historyList.innerHTML = '';
+        }
+
+        const historyItem = document.createElement('div');
+        historyItem.className = 'history-item';
+        
+        const numbersSpan = document.createElement('span');
+        numbersSpan.className = 'history-numbers';
+        numbersSpan.textContent = numbers;
+        
+        const rightSection = document.createElement('div');
+        rightSection.className = 'history-right';
+        
+        const modeSpan = document.createElement('span');
+        modeSpan.className = 'history-mode';
+        modeSpan.textContent = mode;
+        
+        const copyBtn = document.createElement('button');
+        copyBtn.className = 'copy-btn';
+        copyBtn.textContent = '复制';
+        copyBtn.onclick = function() {
+            navigator.clipboard.writeText(numbers).then(() => {
+                showNotification('号码已复制到剪贴板');
+            }).catch(err => {
+                showNotification('复制失败，请手动复制');
+            });
+        };
+        
+        const timeSpan = document.createElement('span');
+        timeSpan.className = 'history-time';
+        timeSpan.textContent = new Date(timestamp).toLocaleString();
+        
+        rightSection.appendChild(modeSpan);
+        rightSection.appendChild(copyBtn);
+        rightSection.appendChild(timeSpan);
+        
+        historyItem.appendChild(numbersSpan);
+        historyItem.appendChild(rightSection);
+        
+        historyList.insertBefore(historyItem, historyList.firstChild);
+        saveHistoryToStorage();
+    }
 }); 
