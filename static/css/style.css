@@ -654,37 +654,38 @@ input:invalid {
 .batch-options {
     display: flex;
     align-items: center;
-    gap: 10px;
-    opacity: 1;
-    pointer-events: auto;
-    transition: opacity 0.3s ease;
+    gap: 12px;
+    margin-bottom: 24px;
+    padding: 0 10px;
 }
 
 .batch-options label {
     white-space: nowrap;
     color: var(--text-color);
+    font-size: 1rem;
 }
 
 .batch-options select {
-    padding: 0.6rem 1rem;
-    border: none;
+    padding: 8px 16px;
+    border: 1px solid var(--border-color);
     border-radius: var(--border-radius);
     background: white;
     font-size: 1rem;
     cursor: pointer;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-    transition: var(--transition);
-    opacity: 1;
-    pointer-events: auto;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    transition: all 0.3s ease;
+    min-width: 100px;
 }
 
 .batch-options select:hover {
-    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    border-color: var(--primary-color);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
 }
 
 .batch-options select:focus {
     outline: none;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    border-color: var(--primary-color);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
 }
 
 /* 生成历史记录样式 */
@@ -869,5 +870,46 @@ input:invalid {
     .clear-btn {
         background-color: #ff3b30;
         color: white;
+    }
+}
+
+/* 生成器容器样式 */
+.generator-container {
+    background: var(--card-bg);
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: var(--card-shadow);
+    margin-bottom: 20px;
+}
+
+/* 生成按钮容器样式 */
+.generate-btn-container {
+    margin-top: 24px;
+    text-align: center;
+}
+
+/* 生成按钮样式优化 */
+.action-btn {
+    margin-top: 8px;
+    padding: 12px 24px;
+    border-radius: var(--border-radius);
+    font-size: 1.1rem;
+    transition: all 0.3s ease;
+}
+
+/* 移动端适配 */
+@media (max-width: 768px) {
+    .batch-options {
+        margin-bottom: 20px;
+        padding: 0 5px;
+    }
+    
+    .batch-options select {
+        padding: 6px 12px;
+        font-size: 0.9rem;
+    }
+    
+    .generate-btn-container {
+        margin-top: 20px;
     }
 }
