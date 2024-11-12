@@ -607,7 +607,7 @@ input:invalid {
     }
 }
 
-/* 移动���适配 */
+/* 移动端适配 */
 @media (max-width: 768px) {
     .generator-mode {
         flex-direction: column;
@@ -1043,5 +1043,149 @@ input:invalid {
     
     .mode-description h3 {
         font-size: 0.95rem;
+    }
+}
+
+/* 历史开奖区域样式 */
+.lottery-history {
+    background: var(--card-bg);
+    border-radius: var(--border-radius);
+    padding: 20px;
+    margin-top: 20px;
+    box-shadow: var(--card-shadow);
+}
+
+.history-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.history-header h2 {
+    margin: 0;
+    font-size: 1.2rem;
+    color: var(--text-color);
+}
+
+.search-box {
+    display: flex;
+    gap: 10px;
+}
+
+.search-box input {
+    padding: 8px 12px;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    font-size: 0.9rem;
+    width: 180px;
+}
+
+.search-btn {
+    padding: 8px 16px;
+    background: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.history-container {
+    background: var(--background-color);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.history-item {
+    padding: 15px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.draw-info {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 12px;
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+}
+
+.draw-numbers {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+}
+
+.red-balls, .blue-balls {
+    display: flex;
+    gap: 8px;
+}
+
+.history-ball {
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    color: white;
+    font-weight: bold;
+    font-size: 0.9rem;
+}
+
+.red-ball {
+    background: var(--red-ball-color);
+}
+
+.blue-ball {
+    background: var(--blue-ball-color);
+}
+
+/* 移动端适配 */
+@media (max-width: 768px) {
+    .history-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+    }
+    
+    .search-box {
+        width: 100%;
+    }
+    
+    .search-box input {
+        flex: 1;
+    }
+    
+    .draw-info {
+        flex-direction: column;
+        gap: 6px;
+    }
+    
+    .draw-numbers {
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+    
+    .history-ball {
+        width: 32px;
+        height: 32px;
+        font-size: 0.85rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .lottery-history {
+        padding: 15px;
+    }
+    
+    .history-item {
+        padding: 12px;
+    }
+    
+    .history-ball {
+        width: 28px;
+        height: 28px;
+        font-size: 0.8rem;
     }
 }
