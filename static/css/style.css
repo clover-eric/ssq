@@ -607,7 +607,7 @@ input:invalid {
     }
 }
 
-/* 移动端适配 */
+/* 移动���适配 */
 @media (max-width: 768px) {
     .generator-mode {
         flex-direction: column;
@@ -994,24 +994,21 @@ input:invalid {
     }
 }
 
-/* 模式说明区域样式 */
+/* 修改模式说明区域样式 */
 .mode-descriptions {
-    margin-top: 15px;
+    margin: 15px 0;
     padding: 15px;
     background: rgba(255, 255, 255, 0.8);
-    border-radius: 12px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    border-radius: 8px;
+    border: 1px solid rgba(0, 0, 0, 0.1);
 }
 
 .mode-description {
     display: none;
-    padding: 12px 15px;
-    border-radius: 8px;
+    padding: 10px;
     font-size: 0.9rem;
     line-height: 1.5;
     color: #666;
-    background: #f8f9fa;
-    margin-bottom: 10px;
 }
 
 .mode-description.active {
@@ -1023,32 +1020,28 @@ input:invalid {
     color: #333;
     margin: 0 0 8px 0;
     font-size: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 6px;
 }
 
 .mode-description p {
     margin: 0;
 }
 
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(-5px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
 /* 移动端适配 */
 @media (max-width: 480px) {
     .mode-descriptions {
-        margin-top: 10px;
-        padding: 10px;
+        margin: 12px 0;
+        padding: 12px;
     }
     
     .mode-description {
-        padding: 10px;
+        padding: 8px;
         font-size: 0.85rem;
+    }
+    
+    .mode-description h3 {
+        font-size: 0.95rem;
     }
 }

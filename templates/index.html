@@ -30,6 +30,17 @@
                         </div>
                     </div>
                     
+                    <div class="mode-descriptions">
+                        <div class="mode-description random-mode-desc active">
+                            <h3>🎲 随机生成模式</h3>
+                            <p>完全随机生成号码，红球从01-33中随机选择6个不重复号码，蓝球从01-16中随机选择1个号码。每注号码都是独立随机的，适合想要完全碰运气的朋友。</p>
+                        </div>
+                        <div class="mode-description smart-mode-desc">
+                            <h3>🤖 智能推荐模式</h3>
+                            <p>基于历史开奖数据分析，结合号码出现频率、遗漏值等多个维度，智能推荐可能性更高的号码组合。适合想要参考数据分析结果的朋友。</p>
+                        </div>
+                    </div>
+
                     <div class="number-stage">
                         <div class="number-area red-area">
                             <div class="area-title">红球区</div>
@@ -143,18 +154,6 @@
         </main>
 
         <div id="notification" class="notification"></div>
-    </div>
-
-    <!-- 添加模式说明区域 -->
-    <div class="mode-descriptions">
-        <div class="mode-description random-mode-desc active">
-            <h3>🎲 随机生成模式</h3>
-            <p>完全随机生成号码，红球从01-33中随机选择6个不重复号码，蓝球从01-16中随机选择1个号码。每注号码都是独立随机的，适合想要完全碰运气的朋友。</p>
-        </div>
-        <div class="mode-description smart-mode-desc">
-            <h3>🤖 智能推荐模式</h3>
-            <p>基于历史开奖数据分析，结合号码出现频率、遗漏值等多个维度，智能推荐可能性更高的号码组合。适合想要参考数据分析结果的朋友。</p>
-        </div>
     </div>
 
     <script src="{{ url_for('static', filename='js/main.js') }}"></script>
