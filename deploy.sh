@@ -18,13 +18,33 @@ PROJECT_DIR="$HOME/ssq"
 mkdir -p "$PROJECT_DIR"
 cd "$PROJECT_DIR"
 
+# 下载文件函数，带重试机制
+download_with_retry() {
+    local url=$1
+    local output=$2
+    local retries=3
+    local timeout=10
+    local delay=2
+
+    for i in $(seq 1 $retries); do
+        if curl -fsSL --connect-timeout $timeout -o "$output" "$url"; then
+            return 0
+        else
+            echo "下载失败，重试 $i/$retries..."
+            sleep $delay
+        fi
+    done
+    echo "错误：无法下载 $url"
+    return 1
+}
+
 # 下载必要文件
-curl -fsSL -o Dockerfile https://raw.githubusercontent.com/clover-eric/ssq/main/Dockerfile
-curl -fsSL -o docker-compose.yml https://raw.githubusercontent.com/clover-eric/ssq/main/docker-compose.yml
-curl -fsSL -o app.py https://raw.githubusercontent.com/clover-eric/ssq/main/app.py
-curl -fsSL -o requirements.txt https://raw.githubusercontent.com/clover-eric/ssq/main/requirements.txt
+download_with_retry https://raw.githubusercontent.com/clover-eric/ssq/main/Dockerfile Dockerfile || exit 1
+download_with_retry https://raw.githubusercontent.com/clover-eric/ssq/main/docker-compose.yml docker-compose.yml || exit 1
+download_with_retry https://raw.githubusercontent.com/clover-eric/ssq/main/app.py app.py || exit 1
+download_with_retry https://raw.githubusercontent.com/clover-eric/ssq/main/requirements.txt requirements.txt || exit 1
 mkdir -p templates
-curl -fsSL -o templates/index.html https://raw.githubusercontent.com/clover-eric/ssq/main/templates/index.html
+download_with_retry https://raw.githubusercontent.com/clover-eric/ssq/main/templates/index.html templates/index.html || exit 1
 
 # 配置国内镜像源
 mkdir -p /etc/docker
