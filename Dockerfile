@@ -1,5 +1,5 @@
-# 使用国内镜像源
-FROM registry.cn-hangzhou.aliyuncs.com/library/python:3.9-slim
+# 使用Docker官方中国镜像源
+FROM registry.docker-cn.com/library/python:3.9-slim
 
 # 设置工作目录
 WORKDIR /app
