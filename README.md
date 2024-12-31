@@ -14,28 +14,45 @@
 
 ### 一键部署（推荐）
 ```bash
-curl -fsSL https://raw.githubusercontent.com/clover-eric/ssq/main/deploy.sh | bash
+curl -fsSL https://raw.githubusercontent.com/clover-eric/ssq/main/deploy.sh | sudo bash
 ```
 
 ### 手动部署
 
-1. 构建并运行容器
+1. 安装依赖
+```bash
+sudo apt-get update
+sudo apt-get install -y docker.io docker-compose
+```
+
+2. 构建并运行容器
 ```bash
 docker-compose up -d
 ```
 
-2. 访问应用
+3. 访问应用
 打开浏览器访问：http://localhost:6168
 
-3. 停止容器
+4. 常用命令
 ```bash
+# 查看日志
+docker-compose logs -f
+
+# 停止服务
 docker-compose down
+
+# 重启服务
+docker-compose restart
+
+# 更新服务
+docker-compose pull && docker-compose up -d
 ```
 
-4. 查看日志
-```bash
-docker-compose logs -f
-```
+### 系统要求
+- Linux 系统
+- Docker 20.10+
+- Docker Compose 1.29+
+- 至少 1GB 可用内存
 
 ## 开发环境
 - Python 3.9
