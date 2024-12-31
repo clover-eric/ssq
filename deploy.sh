@@ -26,6 +26,19 @@ curl -fsSL -o requirements.txt https://raw.githubusercontent.com/clover-eric/ssq
 mkdir -p templates
 curl -fsSL -o templates/index.html https://raw.githubusercontent.com/clover-eric/ssq/main/templates/index.html
 
+# 配置国内镜像源
+mkdir -p /etc/docker
+echo '{
+  "registry-mirrors": [
+    "https://docker.mirrors.ustc.edu.cn",
+    "https://hub-mirror.c.163.com",
+    "https://registry.docker-cn.com"
+  ]
+}' > /etc/docker/daemon.json
+
+# 重启Docker服务
+systemctl restart docker || service docker restart
+
 # 启动服务
 docker-compose up -d
 
