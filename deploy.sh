@@ -13,6 +13,25 @@ if ! command -v docker-compose &> /dev/null; then
     exit 1
 fi
 
+# 检查Docker服务是否运行
+if ! docker info &> /dev/null; then
+    echo "Docker服务未运行，正在尝试启动..."
+    if command -v systemctl &> /dev/null; then
+        systemctl start docker
+    elif command -v service &> /dev/null; then
+        service docker start
+    else
+        echo "无法找到systemctl或service命令来启动Docker"
+        exit 1
+    fi
+    
+    # 再次检查Docker服务是否启动成功
+    if ! docker info &> /dev/null; then
+        echo "无法启动Docker服务，请手动启动后再试"
+        exit 1
+    fi
+fi
+
 # 创建项目目录
 PROJECT_DIR="$HOME/ssq"
 mkdir -p "$PROJECT_DIR"
