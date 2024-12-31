@@ -46,6 +46,13 @@ download_with_retry https://raw.githubusercontent.com/clover-eric/ssq/main/requi
 mkdir -p templates
 download_with_retry https://raw.githubusercontent.com/clover-eric/ssq/main/templates/index.html templates/index.html || exit 1
 
+# 检查sudo权限
+if [ "$EUID" -ne 0 ]; then
+    echo "需要root权限来配置Docker镜像源"
+    echo "请使用sudo重新运行此脚本"
+    exit 1
+fi
+
 # 配置国内镜像源
 mkdir -p /etc/docker
 echo '{
@@ -57,7 +64,14 @@ echo '{
 }' > /etc/docker/daemon.json
 
 # 重启Docker服务
-systemctl restart docker || service docker restart
+if command -v systemctl &> /dev/null; then
+    systemctl restart docker
+elif command -v service &> /dev/null; then
+    service docker restart
+else
+    echo "无法找到systemctl或service命令来重启Docker"
+    exit 1
+fi
 
 # 启动服务
 docker-compose up -d
