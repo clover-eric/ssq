@@ -19,12 +19,12 @@ mkdir -p "$PROJECT_DIR"
 cd "$PROJECT_DIR"
 
 # 下载必要文件
-curl -fsSL -o Dockerfile https://github.com/clover-eric/ssq/raw/main/Dockerfile
-curl -fsSL -o docker-compose.yml https://github.com/clover-eric/ssq/raw/main/docker-compose.yml
-curl -fsSL -o app.py https://github.com/clover-eric/ssq/raw/main/app.py
-curl -fsSL -o requirements.txt https://github.com/clover-eric/ssq/raw/main/requirements.txt
+curl -fsSL -o Dockerfile https://raw.githubusercontent.com/clover-eric/ssq/main/Dockerfile
+curl -fsSL -o docker-compose.yml https://raw.githubusercontent.com/clover-eric/ssq/main/docker-compose.yml
+curl -fsSL -o app.py https://raw.githubusercontent.com/clover-eric/ssq/main/app.py
+curl -fsSL -o requirements.txt https://raw.githubusercontent.com/clover-eric/ssq/main/requirements.txt
 mkdir -p templates
-curl -fsSL -o templates/index.html https://github.com/clover-eric/ssq/raw/main/templates/index.html
+curl -fsSL -o templates/index.html https://raw.githubusercontent.com/clover-eric/ssq/main/templates/index.html
 
 # 启动服务
 docker-compose up -d

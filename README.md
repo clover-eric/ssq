@@ -14,7 +14,7 @@
 
 ### 一键部署（推荐）
 ```bash
-curl -fsSL https://github.com/clover-eric/ssq/raw/main/deploy.sh | bash
+curl -fsSL https://raw.githubusercontent.com/clover-eric/ssq/main/deploy.sh | bash
 ```
 
 ### 手动部署
