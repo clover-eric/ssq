@@ -27,7 +27,7 @@ download_with_retry() {
     local delay=2
 
     for i in $(seq 1 $retries); do
-        if curl -fsSL --connect-timeout $timeout -o "$output" "$url"; then
+        if curl -k -fsSL --connect-timeout $timeout --max-time 30 -o "$output" "$url"; then
             return 0
         else
             echo "下载失败，重试 $i/$retries..."
