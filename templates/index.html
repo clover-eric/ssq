@@ -1,0 +1,746 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>双色球开奖信息</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #B76E79;
+            --secondary-color: #F4E0E3;
+            --accent-color: #8E354A;
+            --background-color: #FDF8F9;
+            --text-color: #2C1810;
+            --gold-gradient: linear-gradient(135deg, #B76E79 0%, #D4AF37 100%);
+        }
+
+        body {
+            background-color: var(--background-color);
+            color: var(--text-color);
+            font-family: 'Noto Serif SC', serif;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1000px;
+            padding: 2rem;
+        }
+
+        .page-title {
+            text-align: center;
+            margin-bottom: 3rem;
+            color: var(--accent-color);
+            font-weight: 600;
+            position: relative;
+            padding-bottom: 1rem;
+        }
+
+        .page-title:after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 3px;
+            background: var(--gold-gradient);
+        }
+
+        .section-card {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(183, 110, 121, 0.1);
+            padding: 2rem;
+            margin-bottom: 2rem;
+            border: 1px solid rgba(183, 110, 121, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .section-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(183, 110, 121, 0.15);
+        }
+
+        .section-title {
+            color: var(--primary-color);
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+        }
+
+        .section-title:before {
+            content: '';
+            display: inline-block;
+            width: 4px;
+            height: 24px;
+            background: var(--gold-gradient);
+            margin-right: 12px;
+            border-radius: 2px;
+        }
+
+        .ball {
+            display: inline-flex;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            align-items: center;
+            justify-content: center;
+            margin: 0 8px;
+            color: white;
+            font-weight: 700;
+            font-size: 1.4rem;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            animation: ballEnter 0.6s ease-out;
+            transform-style: preserve-3d;
+        }
+
+        @keyframes ballEnter {
+            0% {
+                transform: scale(0) rotateX(90deg);
+                opacity: 0;
+            }
+            100% {
+                transform: scale(1) rotateX(0deg);
+                opacity: 1;
+            }
+        }
+
+        .ball:hover {
+            transform: scale(1.15) rotateY(15deg);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        }
+
+        .ball:active {
+            transform: scale(0.95);
+        }
+
+        .red-ball {
+            background: linear-gradient(135deg, #e9394c 0%, #d61836 100%);
+        }
+
+        .blue-ball {
+            background: linear-gradient(135deg, #3b67c8 0%, #1e40af 100%);
+        }
+
+        .lottery-row {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 15px;
+            margin-bottom: 1.2rem;
+            border: 1px solid rgba(183, 110, 121, 0.1);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            animation: cardEnter 0.5s ease-out;
+            transform-style: preserve-3d;
+        }
+
+        @keyframes cardEnter {
+            0% {
+                transform: translateY(20px);
+                opacity: 0;
+            }
+            100% {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .lottery-row:hover {
+            transform: translateX(8px) rotateY(5deg);
+            border-left: 6px solid var(--primary-color);
+            box-shadow: 0 12px 24px rgba(183, 110, 121, 0.15);
+        }
+
+        .lottery-row:active {
+            transform: scale(0.98);
+        }
+
+        .prize-info {
+            margin-top: 1rem;
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .prize-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.3rem 0;
+            border-bottom: 1px dashed #eee;
+        }
+
+        .prize-row:last-child {
+            border-bottom: none;
+        }
+
+        .prize-type {
+            color: var(--primary-color);
+            font-weight: 500;
+        }
+
+        .prize-amount {
+            color: #d61836;
+        }
+
+        .prize-count {
+            color: #1e40af;
+        }
+
+        .sales-info {
+            margin-top: 1rem;
+            font-size: 0.9rem;
+            color: #666;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .input-group {
+            box-shadow: 0 4px 15px rgba(183, 110, 121, 0.1);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .form-control {
+            border: none;
+            padding: 0.8rem 1.2rem;
+            font-size: 1rem;
+        }
+
+        .form-control:focus {
+            box-shadow: none;
+            border-color: var(--primary-color);
+        }
+
+        .btn-primary {
+            background: var(--gold-gradient);
+            border: none;
+            padding: 0.8rem 2rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(183, 110, 121, 0.2);
+            background: linear-gradient(135deg, #D4AF37 0%, #B76E79 100%);
+        }
+
+        .draw-info {
+            color: var(--accent-color);
+            font-size: 1.1rem;
+        }
+
+        .draw-date {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .latest-numbers {
+            margin-top: 1.5rem;
+            text-align: center;
+        }
+
+        .loading-spinner {
+            color: var(--primary-color);
+            width: 3rem;
+            height: 3rem;
+            animation: spin 1.2s linear infinite;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        .loading-text {
+            color: var(--primary-color);
+            font-size: 1.1rem;
+            margin-top: 1rem;
+            animation: pulse 1.5s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0% {
+                opacity: 0.5;
+            }
+            50% {
+                opacity: 1;
+            }
+            100% {
+                opacity: 0.5;
+            }
+        }
+
+        .error-message {
+            color: #dc3545;
+            padding: 1.2rem;
+            border-radius: 12px;
+            background-color: #fff3f3;
+            margin: 1.5rem 0;
+            display: none;
+            animation: errorSlideIn 0.4s ease-out;
+            border-left: 6px solid #dc3545;
+            box-shadow: 0 4px 12px rgba(220, 53, 69, 0.15);
+        }
+
+        @keyframes errorSlideIn {
+            0% {
+                transform: translateY(-20px);
+                opacity: 0;
+            }
+            100% {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .error-message i {
+            margin-right: 8px;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+
+            .ball {
+                width: 35px;
+                height: 35px;
+                font-size: 1rem;
+            }
+
+            .section-card {
+                padding: 1.5rem;
+            }
+        }
+
+        .search-container {
+            max-width: 600px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+
+        .search-group {
+            position: relative;
+            display: flex;
+            align-items: center;
+            background: #fff;
+            padding: 6px;
+            border-radius: 30px;
+            box-shadow: 0 8px 20px rgba(183, 110, 121, 0.15);
+            border: 2px solid transparent;
+            transition: all 0.3s ease;
+            animation: searchGroupEnter 0.5s ease-out;
+        }
+
+        @keyframes searchGroupEnter {
+            0% {
+                transform: scale(0.9);
+                opacity: 0;
+            }
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .search-group:hover {
+            box-shadow: 0 10px 25px rgba(183, 110, 121, 0.2);
+        }
+
+        .search-group:focus-within {
+            border-color: var(--primary-color);
+            box-shadow: 0 10px 25px rgba(183, 110, 121, 0.25);
+        }
+
+        .search-input {
+            flex: 1;
+            border: none !important;
+            padding: 12px 20px !important;
+            font-size: 16px;
+            background: transparent;
+            color: #333;
+            outline: none;
+            box-shadow: none !important;
+        }
+
+        .search-input::placeholder {
+            color: #999;
+            font-size: 15px;
+        }
+
+        .search-btn {
+            min-width: 120px;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 25px;
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--accent-color) 100%);
+            color: white;
+            font-weight: 600;
+            font-size: 15px;
+            letter-spacing: 0.5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .search-btn::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 300%;
+            height: 300%;
+            background: radial-gradient(circle, rgba(255,255,255,0.3) 10%, transparent 10.01%);
+            transform: translate(-50%, -50%) scale(0);
+            transition: transform 0.5s ease-out;
+            pointer-events: none;
+        }
+
+        .search-btn:active::after {
+            transform: translate(-50%, -50%) scale(1);
+            opacity: 0;
+            transition: transform 0s, opacity 0.5s;
+        }
+
+        .search-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(183, 110, 121, 0.4);
+            background: linear-gradient(135deg, var(--accent-color) 0%, var(--primary-color) 100%);
+        }
+
+        .search-btn:active {
+            transform: translateY(0);
+        }
+
+        .search-btn i {
+            font-size: 14px;
+            margin-right: 2px;
+        }
+
+        .search-result {
+            margin-top: 25px;
+            padding: 20px;
+            border-radius: 15px;
+            background: rgba(255, 255, 255, 0.9);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+
+        @keyframes searchPulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+            100% { transform: scale(1); }
+        }
+
+        .search-btn:focus {
+            animation: searchPulse 0.5s ease;
+            outline: none;
+        }
+
+        @media (max-width: 576px) {
+            .search-group {
+                flex-direction: column;
+                padding: 10px;
+                gap: 10px;
+            }
+
+            .search-input {
+                width: 100%;
+                text-align: center;
+            }
+
+            .search-btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="page-title">双色球开奖信息</h1>
+        
+        <!-- 错误提示 -->
+        <div id="error-message" class="error-message"></div>
+        
+        <!-- 最新开奖信息 -->
+        <div class="section-card">
+            <h2 class="section-title">最新开奖</h2>
+            <div id="latest-result">
+                <div class="text-center">
+                    <div class="spinner-border loading-spinner" role="status">
+                        <span class="visually-hidden">加载中...</span>
+                    </div>
+                    <div class="loading-text">正在获取最新开奖信息...</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 期号查询 -->
+        <div class="section-card">
+            <h2 class="section-title">期号查询</h2>
+            <div class="search-container">
+                <div class="search-group">
+                    <input type="text" id="issue-input" 
+                           class="search-input" 
+                           placeholder="请输入要查询的期号（如：2023001）" 
+                           aria-label="期号">
+                    <button class="search-btn" type="button" onclick="searchByIssue()">
+                        <i class="fas fa-search"></i>
+                        <span>查 询</span>
+                    </button>
+                </div>
+                <div id="search-result" class="search-result" style="display: none;"></div>
+            </div>
+        </div>
+
+        <!-- 历史开奖 -->
+        <div class="section-card">
+            <h2 class="section-title">历史开奖</h2>
+            <div id="history-results">
+                <div class="text-center">
+                    <div class="spinner-border loading-spinner" role="status">
+                        <span class="visually-hidden">加载中...</span>
+                    </div>
+                    <div class="loading-text">正在获取历史开奖信息...</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 格式化日期显示
+        function formatDate(dateString) {
+            if (!dateString) return '';
+            const date = new Date(dateString);
+            return date.toLocaleDateString('zh-CN', {
+                year: 'numeric',
+                month: '2-digit',
+                day: '2-digit',
+                hour: '2-digit',
+                minute: '2-digit'
+            }).replace(/\//g, '-');
+        }
+
+        // 显示错误信息
+        function showError(message) {
+            const errorDiv = document.getElementById('error-message');
+            errorDiv.innerHTML = `<i class="fas fa-exclamation-circle"></i>${message}`;
+            errorDiv.style.display = 'block';
+            setTimeout(() => {
+                errorDiv.style.display = 'none';
+            }, 5000);
+        }
+
+        // 显示开奖结果
+        function displayDrawResult(result, container) {
+            if (!result) {
+                container.innerHTML = '<div class="text-center">暂无数据</div>';
+                return;
+            }
+
+            const redBalls = result.red.split(',');
+            const blueBall = result.blue;
+
+            let html = `
+                <div class="draw-info">第 ${result.code} 期</div>
+                <div class="draw-date">开奖时间：${formatDate(result.date)}</div>
+                <div class="latest-numbers">
+            `;
+
+            // 红球
+            redBalls.forEach(ball => {
+                html += `<span class="ball red-ball">${ball.padStart(2, '0')}</span>`;
+            });
+
+            // 蓝球
+            html += `<span class="ball blue-ball">${blueBall.padStart(2, '0')}</span>`;
+            html += '</div>';
+
+            // 销量和奖池信息
+            html += `
+                <div class="sales-info">
+                    <span>销售金额：${formatMoney(result.sales)}元</span>
+                    <span>奖池金额：${formatMoney(result.poolmoney)}元</span>
+                </div>
+            `;
+
+            // 中奖信息
+            if (result.prizegrades && result.prizegrades.length > 0) {
+                html += '<div class="prize-info">';
+                result.prizegrades.forEach(prize => {
+                    if (prize.type <= 6) { // 只显示一等奖到六等奖
+                        html += `
+                            <div class="prize-row">
+                                <span class="prize-type">${getPrizeTypeName(prize.type)}：</span>
+                                <span class="prize-amount">${formatMoney(prize.typemoney)}元</span>
+                                <span class="prize-count">${prize.typenum}注</span>
+                            </div>
+                        `;
+                    }
+                });
+                html += '</div>';
+            }
+
+            container.innerHTML = html;
+        }
+
+        // 格式化金额显示
+        function formatMoney(amount) {
+            return new Intl.NumberFormat('zh-CN').format(amount);
+        }
+
+        // 获取奖项名称
+        function getPrizeTypeName(type) {
+            const prizeTypes = {
+                1: '一等奖',
+                2: '二等奖',
+                3: '三等奖',
+                4: '四等奖',
+                5: '五等奖',
+                6: '六等奖'
+            };
+            return prizeTypes[type] || `未知奖项(${type})`;
+        }
+
+        // 获取最新开奖信息
+        async function fetchLatestDraw() {
+            try {
+                const response = await fetch('/api/lottery/latest');
+                if (!response.ok) throw new Error('网络请求失败');
+                const data = await response.json();
+                displayDrawResult(data, document.getElementById('latest-result'));
+            } catch (error) {
+                showError('获取最新开奖数据失败，请稍后重试');
+                document.getElementById('latest-result').innerHTML = '<div class="text-center">获取数据失败</div>';
+            }
+        }
+
+        // 获取历史开奖信息
+        async function fetchHistoryDraws() {
+            try {
+                const response = await fetch('/api/lottery/history');
+                if (!response.ok) throw new Error('网络请求失败');
+                const data = await response.json();
+                
+                const container = document.getElementById('history-results');
+                if (!data || data.length === 0) {
+                    container.innerHTML = '<div class="text-center">暂无历史数据</div>';
+                    return;
+                }
+
+                let html = '';
+                data.forEach(result => {
+                    html += '<div class="lottery-row">';
+                    const resultContainer = document.createElement('div');
+                    displayDrawResult(result, resultContainer);
+                    html += resultContainer.innerHTML;
+                    html += '</div>';
+                });
+
+                container.innerHTML = html;
+            } catch (error) {
+                showError('获取历史开奖数据失败，请稍后重试');
+                document.getElementById('history-results').innerHTML = '<div class="text-center">获取数据失败</div>';
+            }
+        }
+
+        // 期号查询功能
+        async function searchByIssue() {
+            const issueInput = document.getElementById('issue-input').value.trim();
+            const resultContainer = document.getElementById('search-result');
+            
+            if (!issueInput) {
+                showError('请输入要查询的期号');
+                return;
+            }
+
+            try {
+                // 显示加载动画
+                resultContainer.style.display = 'block';
+                resultContainer.innerHTML = `
+                    <div class="text-center p-4">
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="visually-hidden">查询中...</span>
+                        </div>
+                        <div class="loading-text">正在查询中，请稍候...</div>
+                    </div>
+                `;
+
+                const response = await fetch(`/api/lottery/issue/${issueInput}`);
+                if (!response.ok) {
+                    if (response.status === 404) {
+                        resultContainer.innerHTML = `
+                            <div class="text-center p-4">
+                                <i class="fas fa-exclamation-circle text-warning" style="font-size: 2rem;"></i>
+                                <div class="mt-2">未找到该期号的开奖信息</div>
+                            </div>
+                        `;
+                    } else {
+                        throw new Error('网络请求失败');
+                    }
+                    return;
+                }
+
+                const data = await response.json();
+                if (!data) {
+                    resultContainer.innerHTML = `
+                        <div class="text-center p-4">
+                            <i class="fas fa-exclamation-circle text-warning" style="font-size: 2rem;"></i>
+                            <div class="mt-2">未找到该期号的开奖信息</div>
+                        </div>
+                    `;
+                    return;
+                }
+
+                // 清空并显示结果容器
+                resultContainer.innerHTML = '';
+                const drawContainer = document.createElement('div');
+                drawContainer.className = 'lottery-row';
+                displayDrawResult(data, drawContainer);
+                resultContainer.appendChild(drawContainer);
+                
+                // 平滑滚动到结果区域
+                resultContainer.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            } catch (error) {
+                showError('查询失败，请稍后重试');
+                resultContainer.innerHTML = `
+                    <div class="text-center p-4">
+                        <i class="fas fa-times-circle text-danger" style="font-size: 2rem;"></i>
+                        <div class="mt-2">查询失败，请稍后重试</div>
+                    </div>
+                `;
+            }
+        }
+
+        // 为期号输入框添加回车事件监听
+        document.getElementById('issue-input').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                searchByIssue();
+            }
+        });
+
+        // 页面加载完成后获取数据
+        document.addEventListener('DOMContentLoaded', () => {
+            fetchLatestDraw();
+            fetchHistoryDraws();
+
+            // 自动刷新最新开奖信息（每5分钟）
+            setInterval(fetchLatestDraw, 5 * 60 * 1000);
+        });
+    </script>
+</body>
+</html>
